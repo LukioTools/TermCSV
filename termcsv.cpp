@@ -21,7 +21,7 @@
 #include <thread>
 #include <variant>
 #include <vector>
-
+#include "Cell.hpp"
 std::ofstream logt("/dev/pts/3");
 
 volatile bool run = true;
@@ -36,7 +36,6 @@ struct equation
     
 };
 
-typedef std::variant<std::monostate, std::ustring, long, double, equation, std::chrono::time_point<std::chrono::system_clock>> cell_value;
 
 
 void draw_str(RenderBuffer<Pixel>& rb, const std::ustring& str, unsigned int x, unsigned int y, unsigned int w){
@@ -95,6 +94,14 @@ std::ustring to_string(const cell_value& a){
             return L"unknown";
     }
 }
+
+
+struct Cell
+{
+    cell_value value = std::monostate();
+};
+
+
 
 struct Column
 {

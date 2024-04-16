@@ -2,6 +2,8 @@
     "files.associations": {
         "iostream": "cpp",
         "variant": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "chrono": "cpp"
     }
 }
