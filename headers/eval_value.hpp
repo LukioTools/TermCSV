@@ -48,12 +48,9 @@ struct eval_value : public std::variant<std::monostate, std::ustring, long, doub
 
         std::ustring to_string() const {
             switch (index()) {
-                case STRING:
-                    return as<STRING>();
-                case INTEGER:
-                    return std::to_wstring(as<INTEGER>());
-                case FLOATING:
-                    return std::to_wstring(as<FLOATING>());
+                case STRING: return as<STRING>();
+                case INTEGER: return std::to_wstring(as<INTEGER>());
+                case FLOATING: return std::to_wstring(as<FLOATING>());
                 case NONE:
                 default:
                     return {};

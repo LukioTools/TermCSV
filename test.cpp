@@ -26,7 +26,10 @@ int main(int argc, char const *argv[])
         Getters::value::shared(17)
     ).func(fn);
 
-
     std::wcout << e.eval(s).to_string() << std::endl;
+
+    std::ustring str(L"123 banana");
+    std::wcout << cell_value::create(str).eval(s).to_string() << std::endl;
+
     return 0;
 }

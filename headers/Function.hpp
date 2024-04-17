@@ -4,6 +4,7 @@
 #include <functional>
 #include <memory>
 #include <span>
+#include <string_view>
 #include <type_traits>
 #include <variant>
 #include <vector>
@@ -52,6 +53,9 @@ public:
 
     eval_value operator()(Sheet& s)const{
         return eval(s);
+    }
+    inline static Function create(const std::span<std::unicode>& view){
+        return Function();
     }
 
     Function() {}
