@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Cell.hpp"
+#include <algorithm>
+#include <iostream>
 #include <memory>
 #include <span>
 #include <sys/types.h>
@@ -8,6 +10,7 @@
 #include "../headers/Sheet.hpp"
 struct Column
 {
+public:
     inline size_t size()const{
         return cells.size();
     }
@@ -22,13 +25,11 @@ struct Column
         return std::span<std::unique_ptr<Cell>>{cells.begin()+from, cells.begin()+to};
     }
     Cell& operator[](size_t i){
-        if(i >= size()){
-            cells.resize(i);
+        while (i >= size()) {
+            cells.emplace_back(nullptr);
         }
-
         auto& e = cells[i];
-        if(e) return *e;
-        e = e->unique();
+        if(!e) e = Cell::unique(this);
         return *e;
     }
     uint width(){
@@ -56,13 +57,22 @@ struct Column
         return out;
     }
 
-    Column(){}
-    Column(size_t index, uint width = 4) : n(make_name(index)), w(width) {}
-    Column(std::ustring name, uint width = 4) : n(name), w(width) {}
+    inline static std::unique_ptr<Column> unique(Sheet* parent, size_t index, uint width = 4){
+        return std::make_unique<Column>(parent, index, width);
+    }
+
+    inline static std::unique_ptr<Column> unique(Sheet* parent, std::ustring name, uint width = 4){
+        return std::make_unique<Column>(parent, name, width);
+    }
+
+    Column(Sheet* p, size_t index, uint width = 4) : parent(p), n(make_name(index)), w(width) {}
+    Column(Sheet* p, std::ustring name, uint width = 4) : n(name), w(width) {}
+    Column(Column&& move) :parent(move.parent), n(std::move(move.n)), w(move.w), cells(std::move(move.cells)) {}
+
+
     ~Column() = default;
 
     Sheet* parent = nullptr;
-protected:
     std::ustring n;
     uint w = 4;
     std::vector<std::unique_ptr<Cell>> cells;

@@ -3,29 +3,30 @@
 #include <chrono>
 #include <cstddef>
 #include <memory>
+#include <tuple>
 #include <type_traits>
 #include <variant>
 #include "../../Term3D/Unicode/Unicode.hpp"
 #include "../headers/Cell.hpp"
-#include "../headers/Equation.hpp"
+#include "../headers/Function.hpp"
 #include "../headers/Column.hpp"
 
 
-class cell_value : public std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>{
+class cell_value : public std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>{
 public:
-    using std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>::variant;
-    using std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>::operator=;
-    using std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>::emplace;
-    using std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>::index;
-    using std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>::swap;
-    using std::variant<std::monostate, std::ustring, long, double, Equation, std::chrono::time_point<std::chrono::system_clock>>::valueless_by_exception;
+    using std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>::variant;
+    using std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>::operator=;
+    using std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>::emplace;
+    using std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>::index;
+    using std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>::swap;
+    using std::variant<std::monostate, std::ustring, long, double, Function, std::chrono::time_point<std::chrono::system_clock>>::valueless_by_exception;
 
     enum {
         NONE,
         STRING,
         INTEGER,
         FLOATING,
-        EQUATION,
+        FUNCTION,
         TIMEPOINT,
     };
 
@@ -33,6 +34,20 @@ public:
     auto& as() const{
         return std::get<e>(*this);
     }
+    template<class T>
+    auto& get(){
+        return std::get<T>(*this);
+    }
+    template<class T>
+    auto& cget()const{
+        return std::get<T>(*this);
+    }
+    template<class T>
+    T& set(T&& obj){
+        this->operator=(obj);
+        return get<T>();
+    }
+
 
     eval_value add(Sheet& s, const eval_value& e) const{
         return e.add(eval(s));
@@ -49,8 +64,8 @@ public:
                 return  as<INTEGER>();
             case cell_value::FLOATING:
                 return as<FLOATING>();
-            case cell_value::EQUATION:
-                return as<EQUATION>().eval(s);
+            case cell_value::FUNCTION:
+                return as<FUNCTION>().eval(s);
             default:
                 return std::monostate();
         }
@@ -58,13 +73,15 @@ public:
 
     
 };
-struct Cell
+struct Cell : public cell_value
 {
 public:
-    cell_value value = std::monostate();
-    Column* parent = nullptr;
+    Column* parent;
 
-    static std::unique_ptr<Cell> unique(){
-        return std::make_unique<Cell>();
+    using cell_value::operator=;
+
+    static std::unique_ptr<Cell> unique(Column* parent){
+        return std::make_unique<Cell>(parent);
     }
+    Cell(Column* parent, const cell_value& cv = std::monostate()): cell_value(cv), parent(parent){}
 };
