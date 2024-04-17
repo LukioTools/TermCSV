@@ -17,18 +17,18 @@
 
 
 
-inline Equation::eval_value Equation::add(Sheet& s, std::span<cell_value> cv){
-    Equation::eval_value out = 0L;
+inline eval_value add_f(Sheet& s, std::span<cell_value> cv){
+    eval_value out = 0L;
     for(const auto& e : cv){
-        out=e.add(s, out);
+        out=e.eval(s)+out;
     }
     return out;
 }
 
-inline Equation::eval_value Equation::multiply(Sheet& s, std::span<cell_value> cv){
-    Equation::eval_value out = 0L;
+inline eval_value multiply_f(Sheet& s, std::span<cell_value> cv){
+    eval_value out = 0L;
     for(const auto& e : cv){
-        out=e.add(s, out);
+        out=e.eval(s)*out;
     }
     return out;
 }

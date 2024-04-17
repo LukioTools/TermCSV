@@ -34,29 +34,25 @@ public:
         return std::get<e>(*this);
     }
 
-    Equation::eval_value add(Sheet& s, const Equation::eval_value& e) const{
-        switch (index()) {
-            case INTEGER:
-                return  e.add(as<INTEGER>());
-            case cell_value::FLOATING:
-                return e.add(as<FLOATING>());
-            case cell_value::EQUATION:
-                return e.add(as<EQUATION>().eval(s));
-            default:
-                return e;
-        }
+    eval_value add(Sheet& s, const eval_value& e) const{
+        return e.add(eval(s));
     }
 
-    Equation::eval_value multiply(Sheet& s, const Equation::eval_value& e) const{
+    eval_value multiply(Sheet& s, const eval_value& e) const{
+        return e.multiply(eval(s));
+    }
+
+
+    eval_value eval(Sheet& s)const{
         switch (index()) {
             case INTEGER:
-                return  e.multiply(as<INTEGER>());
+                return  as<INTEGER>();
             case cell_value::FLOATING:
-                return e.multiply(as<FLOATING>());
+                return as<FLOATING>();
             case cell_value::EQUATION:
-                return e.multiply(as<EQUATION>().eval(s));
+                return as<EQUATION>().eval(s);
             default:
-                return e;
+                return std::monostate();
         }
     }
 
