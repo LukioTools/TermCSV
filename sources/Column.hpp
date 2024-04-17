@@ -1,12 +1,11 @@
-
-
-
+#pragma once
 
 #include "Cell.hpp"
 #include <memory>
 #include <span>
 #include <sys/types.h>
 #include <vector>
+#include "../headers/Sheet.hpp"
 struct Column
 {
     inline size_t size()const{
@@ -62,6 +61,7 @@ struct Column
     Column(std::ustring name, uint width = 4) : n(name), w(width) {}
     ~Column() = default;
 
+    Sheet* parent = nullptr;
 protected:
     std::ustring n;
     uint w = 4;
