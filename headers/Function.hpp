@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <regex>
 #include <span>
 #include <type_traits>
 #include <utility>
@@ -15,14 +16,13 @@
 #include <vector>
 #include "Getters/value.hpp"
 #include "eval_value.hpp"
-
 typedef std::function<eval_value(Sheet&, std::span<eval_value>)> Function_t;
 
 class Function
 {
 private:
 public:
-    std::function<eval_value(Sheet&, std::span<eval_value>)> fn = [](Sheet& s, std::span<eval_value>){return std::monostate();};
+    Function_t fn = [](Sheet& s, std::span<eval_value>){return std::monostate();};
     std::vector<std::shared_ptr<Getter>> getters;   //shall be empty
     
     eval_value eval(Sheet& s)const{
@@ -52,7 +52,7 @@ public:
         return *this;
     }
 
-    Function& func(const std::function<eval_value(Sheet&, std::span<eval_value>)>& f){
+    Function& func(const Function_t& f){
         fn=f;
         return *this;
     }
@@ -61,11 +61,24 @@ public:
         return eval(s);
     }
 
+    enum term_type{
+        UNKNOWN,
+        VALUE,
+        CELL_SPAN,
+        FUNCTION,
+    };
+    inline static term_type identify_term(const std::span<const std::unicode> span){
+        if(span.empty()) return UNKNOWN;
+        static const std::wregex is_span(L"^!?\\d+:!?\\d+->!?\\d+:!?\\d+$");
+        static const std::wregex is_fn(L"^\\w+\\(.*\\)$");
+        if(std::regex_match(span.begin(), span.end(), is_span)) return CELL_SPAN;
+        if(std::regex_match(span.begin(), span.end(), is_fn)) return FUNCTION;
+        return VALUE;   //its the problem of the value constructor to determine what kind of value it is
+    }
 
-private:
-
-    inline static std::vector<std::span<std::unicode>> parse_terms(const std::span<std::unicode>& view){
-        std::vector<std::span<std::unicode>> out;
+    inline static std::shared_ptr<Getter> parse_term(const std::span<const std::unicode>& view);
+    inline static std::vector<std::span<std::unicode const>> parse_terms(const std::span<const std::unicode>& view){
+        std::vector<std::span<std::unicode const>> out;
         long depth = 0;
         size_t pos = 0;
         for (size_t i = 0; i < view.size(); i++)
@@ -83,80 +96,51 @@ private:
             out.push_back(view.subspan(pos));
         return out;        
     }
-
-    inline static std::pair<std::span<std::unicode>, std::span<std::unicode>> parse_func(const std::span<std::unicode>& view){
+    inline static std::pair<std::span<std::unicode const>, std::span<std::unicode const>> parse_func(const std::span<const std::unicode>& view){
         std::unicode ch = '(';
         auto inside_begin = std::find_first_of(view.begin(), view.end(), &ch, (&ch)+1);
         if(inside_begin == view.end()) return {view, {}}; 
         return {{view.begin(), inside_begin}, {inside_begin+1, view.end()-1}};
     }
-
-
-    inline static std::span<std::unicode> func_name(const std::span<std::unicode>& view){
-        for (size_t i = 0; i < view.size(); i++)
-            if(view[i] == '(')
-                return view.subspan(0, i);
-        return view;        
+    inline static std::ustring to_string(const std::span<std::unicode const> span){
+        return std::ustring(span.begin(), span.end());
     }
+    
 
-
-    inline static std::vector<std::shared_ptr<Getter>> recursive(Function fn, std::span<std::unicode> view){
-
-        return {};
-    }
-    inline static Function_t find(std::span<std::unicode> fname){
-        for(auto& e : parsers){
-            if(e.fname.size() != fname.size()) continue;
-            bool cont = false;
-            for (size_t i = 0; i < fname.size(); i++)
-            {
-                if(e.fname[i] != fname[i]){
-                    cont = true;
-                    break;
-                };
-            }
-            if(cont) continue;
-            return e.fn;
-        }
-        return nullptr;
-    }
-
-    std::shared_ptr<Getter> parse_value(std::span<std::unicode> args){
+    inline static std::shared_ptr<Getter> parse_value(std::span<std::unicode const> args);
+    /*
+    {
         return Getters::value::shared(eval_value::create(args));
     }
-
+    */
         //figure out parsing and other shit
-    std::shared_ptr<Getter> parse_cell_range(std::span<std::unicode> args){
+    inline static std::shared_ptr<Getter> parse_cell_range(std::span<std::unicode const> args);
+    /*
+    {
         //ait so pares %d:%d->d%:d%
         return nullptr;
         //return Getters::cell_range::shared({},{});
     }
+    */
+
+    inline static std::shared_ptr<Getter> parse_function(std::span<std::unicode const> args);
+        /*
+        {
+            Function fn;
+            return Getters::function_getter::shared(fn);
+        }
+        */
+
 public:
     inline static Function create(const std::span<std::unicode>& view){
         Function fn;
-        std::wcout << L"input string: " << std::ustring(view.begin(), view.end()) << std::endl;
-        auto func = parse_func(view);
-        std::wcout << L"func name: " << std::ustring(func.first.begin(), func.first.end()) << std::endl;
-        std::wcout << L"func ptr found: " <<  (bool)find(func.first) << std::endl;
-
-        std::wcout << L"func args: " << std::ustring(func.second.begin(), func.second.end()) << std::endl;
-        auto terms = parse_terms(func.second);
-        std::wcout << L"terms: " << terms.size() << std::endl;
-        for(auto& e : terms){
-            std::wcout << std::ustring(e.begin(), e.end()) << std::endl;
-        }
         return fn;
     }
 
-    Function() {}
-    ~Function() {}
+    Function() = default;
+    ~Function() = default;
+    Function(const Function& copy):fn(copy.fn), getters(copy.getters){};
+    Function(Function&& move): fn(std::move(move.fn)), getters(std::move(move.getters)){};
 
-    struct FunctionParser
-    {
-        Function_t fn;
-        std::ustring fname;
-        std::shared_ptr<Getter>(*create)(std::span<std::unicode const> args) = nullptr;
-    };
-
-    inline static std::map<std::ustring, std::function<std::shared_ptr<Getter>(std::span<std::unicode const>)>> parsers;
+    inline static std::map<std::ustring, Function_t> parsers;
 };

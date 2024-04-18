@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Getter.hpp"
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 #include "../../sources/Sheet.hpp"
@@ -12,6 +13,9 @@ namespace Getters
         //has to be actually a range, aka [0, 2[, where 2 is excluded
         glm::uvec2 b = {0,0};
         glm::uvec2 e = {0,0};
+        glm::bvec4 state = {0,0,0,0};
+
+
             //one column at a time, empty cells, empty columns left out
         std::vector<eval_value> get(Sheet &s) override{
             if(b == e) return {};

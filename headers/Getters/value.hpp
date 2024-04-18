@@ -7,11 +7,10 @@
 
 namespace Getters
 {
-    struct value : public Getter
+    struct value : public Getter , public eval_value
     {
-        eval_value v;
         std::vector<eval_value> get(Sheet &s) override{
-            return {v};
+            return {*this};
         }
         inline static std::unique_ptr<Getter> unique(const eval_value& ev){
             return std::make_unique<value>(ev);
@@ -19,8 +18,7 @@ namespace Getters
         inline static std::shared_ptr<Getter> shared(const eval_value& ev){
             return std::make_shared<value>(ev);
         }
-
-        value(const eval_value& ev = std::monostate()) : v(ev){}
+        value(const eval_value& ev = std::monostate()) : eval_value(ev){}
     };
 } // namespace Getters
 

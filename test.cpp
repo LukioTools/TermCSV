@@ -31,9 +31,7 @@ eval_value fn_multiply(Sheet &, std::span<eval_value> values) {
 
 int main(int argc, char const *argv[])
 {
-    Function::parsers.emplace_back(fn_add, L"ADD");
-    Function::parsers.emplace_back(fn_multiply, L"MULTIPLY");
-    std::ustring str = L"ADD(MULTIPLY(6,6),15,17)";
+    std::ustring str = L"ADD(MULTIPLY(VALUE(6),VALUE(6)),VALUE(15),VALUE(17))";
 
     Sheet s;
 
