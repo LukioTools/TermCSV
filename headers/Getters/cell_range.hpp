@@ -2,6 +2,7 @@
 
 #include "../Getter.hpp"
 #include <glm/glm.hpp>
+#include <memory>
 #include "../../sources/Sheet.hpp"
 namespace Getters
 {
@@ -19,11 +20,20 @@ namespace Getters
                 auto& c = s[x];
                 for (size_t y = b.y; y < e.y && y < c.size(); y++){
                     auto& v = c[y];
-                    out.emplace_back(v.value.eval(s));
+                    out.emplace_back(v.eval(s));
                 }
             }
             return out;
         };
+        inline static cell_range create(const std::span<std::unicode const>& span){
+            return cell_range{{},{}};
+        }
+        inline static std::shared_ptr<Getter> shared(const glm::uvec2 from, const glm::uvec2 to){
+            return std::make_shared<cell_range>(from, to);
+        }
+        inline static std::unique_ptr<Getter> unique(const glm::uvec2 from, const glm::uvec2 to){
+            return std::make_unique<cell_range>(from, to);
+        }
         cell_range(const glm::uvec2 from, const glm::uvec2 to) : b(from), e(to){}
     };
 } // namespace Getters

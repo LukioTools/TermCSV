@@ -1,4 +1,5 @@
 #pragma once
+#include <span>
 #include <variant>
 #include "../../Term3D/Unicode/Unicode.hpp"
 
@@ -18,6 +19,27 @@ struct eval_value : public std::variant<std::monostate, std::ustring, long, doub
             INTEGER,
             FLOATING,
         };
+
+        inline static eval_value create(const std::span<std::unicode const>& span){
+            if(span.empty()) return std::monostate();
+            //try to parse an integer
+            auto str = std::ustring(span.begin(), span.end());
+            bool has_dot = false; //, or .
+            for(auto& e : span){
+                if(e == '.' || e == ','){
+                    if(has_dot) return str; //if two dots
+                    has_dot = true;
+                    continue;
+                }
+                if(e < '0' || e > '9') return str;  //if not a dot or a number
+            }
+            try {
+                if(has_dot) return std::stod(str);
+                return std::stol(str);
+            } catch (...) {
+                return str;
+            }
+        }
 
 
         template<std::size_t e>
