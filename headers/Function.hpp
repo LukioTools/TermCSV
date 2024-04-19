@@ -107,14 +107,14 @@ public:
     }
     
 
-    inline static std::shared_ptr<Getter> parse_value(std::span<std::unicode const> args);
+    inline static std::shared_ptr<Getter> parse_value(const std::span<const std::unicode>& args);
     /*
     {
         return Getters::value::shared(eval_value::create(args));
     }
     */
         //figure out parsing and other shit
-    inline static std::shared_ptr<Getter> parse_cell_range(std::span<std::unicode const> args);
+    inline static std::shared_ptr<Getter> parse_cell_range(const std::span<const std::unicode>& args);
     /*
     {
         //ait so pares %d:%d->d%:d%
@@ -123,7 +123,7 @@ public:
     }
     */
 
-    inline static std::shared_ptr<Getter> parse_function(std::span<std::unicode const> args);
+    inline static std::shared_ptr<Getter> parse_function(const std::span<const std::unicode>& args);
         /*
         {
             Function fn;

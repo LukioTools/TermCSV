@@ -5,6 +5,13 @@
 #include <memory>
 
 
+std::shared_ptr<Getter> Function::parse_value(const std::span<const std::unicode>& args){
+    return nullptr;
+};
+std::shared_ptr<Getter> Function::parse_cell_range(const std::span<const std::unicode>& args){
+    return Getters::cell_range::shared(args);
+};
+
 std::shared_ptr<Getter> Function::parse_term(const std::span<const std::unicode> &view){
     auto spt = identify_term(view);
     //UNKNOWN,
@@ -26,7 +33,7 @@ std::shared_ptr<Getter> Function::parse_term(const std::span<const std::unicode>
 
 };
 
-std::shared_ptr<Getter> Function::parse_function(std::span<const std::unicode> whole_string){
+std::shared_ptr<Getter> Function::parse_function(const std::span<const std::unicode>& whole_string){
     Function fn;
     auto func = Function::parse_func(whole_string);
     auto args = Function::parse_terms(func.second);

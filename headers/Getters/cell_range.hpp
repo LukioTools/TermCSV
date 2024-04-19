@@ -1,9 +1,13 @@
 #pragma once
 
 #include "../Getter.hpp"
+#include <algorithm>
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <memory>
+#include <span>
+#include <string_view>
+#include <variant>
 #include "../../sources/Sheet.hpp"
 namespace Getters
 {
@@ -29,16 +33,48 @@ namespace Getters
             }
             return out;
         };
-        inline static cell_range create(const std::span<std::unicode const>& span){
-            return cell_range{{},{}};
-        }
         inline static std::shared_ptr<Getter> shared(const glm::uvec2 from, const glm::uvec2 to){
             return std::make_shared<cell_range>(from, to);
         }
         inline static std::unique_ptr<Getter> unique(const glm::uvec2 from, const glm::uvec2 to){
             return std::make_unique<cell_range>(from, to);
         }
+        inline static std::ustring range_seperator = L"->";
+        inline static std::ustring component_seperator = L":";
+        inline static constexpr glm::uvec2 invalid = {-1, -1};
+
+        inline static std::shared_ptr<Getter> shared(const std::span<const std::unicode>& span) try {
+            auto sep = find(span, range_seperator);
+            if(sep == span.end()) return nullptr;
+
+            std::span<const std::unicode>beg{span.begin(), sep};
+            std::span<const std::unicode>end{sep + range_seperator.size(), span.end()};
+            auto from = components(beg);
+            auto to = components(end);
+
+            if(from == invalid) return nullptr;
+
+            return std::make_shared<cell_range>(from, to);
+        }catch(...){
+            return nullptr;
+        }
+
         cell_range(const glm::uvec2 from, const glm::uvec2 to) : b(from), e(to){}
+
+    private:
+        inline static std::span<const std::unicode>::iterator find(const std::span<const std::unicode>& span, const std::wstring_view v){
+            std::wstring_view view(span.begin(), span.end());
+            auto e = view.find(v);
+            if(e == std::variant_npos) return span.end();
+            return span.begin()+e;
+        }
+        inline static glm::uvec2 components(const std::span<const std::unicode>& span)try{
+            
+            return {-1, -1};
+        }catch(...){
+            return {-1, -1};
+        }
+
     };
 } // namespace Getters
 
