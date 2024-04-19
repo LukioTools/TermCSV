@@ -6,10 +6,10 @@
 
 
 std::shared_ptr<Getter> Function::parse_value(const std::span<const std::unicode>& args){
-    return nullptr;
+    return std::make_shared<Getters::value>(eval_value::create(args));
 };
 std::shared_ptr<Getter> Function::parse_cell_range(const std::span<const std::unicode>& args){
-    return Getters::cell_range::shared(args);
+    return std::make_shared<Getters::cell_range>(args);
 };
 
 std::shared_ptr<Getter> Function::parse_term(const std::span<const std::unicode> &view){

@@ -1,9 +1,13 @@
+#include "headers/Getters/cell_range.hpp"
 #include "headers/Getters/getters.hpp"
 #include "headers/Function.hpp"
 #include "headers/Getters/value.hpp"
 #include "sources/Cell.hpp"
 #include "sources/Sheet.hpp"
+#include "sources/Function.hpp"
 #include <iostream>
+#include <memory>
+#include <ostream>
 #include <span>
 #include <tuple>
 #include <variant>
@@ -35,25 +39,22 @@ int main(int argc, char const *argv[])
 
     Sheet s;
 
-    std::wcout << Function::create(str).eval(s).to_string() << std::endl;
+    s[0][0].set(69L);
 
-    /*
-    auto& c = s[0];
-    auto& e = c[0];
-    e.set(Function()).add(
-        Getters::function::shared(Function().add(
-            Getters::value::shared(6),
-            Getters::value::shared(6)
-        ).func(fn_multiply)),
-        Getters::value::shared(15), 
-        Getters::value::shared(17)
-    ).func(fn_add);
+    //std::wcout << Function::create(str).eval(s).to_string() << std::endl;
 
-    std::wcout << e.eval(s).to_string() << std::endl;
+    std::ustring pvs = L"003451";
+    std::wcout << pvs << L": " << std::flush;
+    for(auto& e : Function::parse_value(pvs)->get(s)){
+        std::wcout << e.to_string() << std::endl;
+    };
 
-    std::ustring str(L"123 banana");
-    std::wcout << cell_value::create(str).eval(s).to_string() << std::endl;
-    */
+    std::ustring c = L"0:0->"; //select every cell plausable
+    std::wcout << L"range: " << c << L" (aka every cell that exists)"<<std::endl;
+    std::wcout << L"selected cell values: " << std::endl;
+    for(auto& e : Function::parse_cell_range(c)->get(s)){
+        std::wcout << e.to_string() << std::endl;
+    }
 
     return 0;
 }
