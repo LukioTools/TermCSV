@@ -56,7 +56,7 @@ namespace Getters
             state = {from.second.x, from.second.y, to.second.x, to.second.y};
         }
 
-    //private:
+    private:
         inline static std::span<const std::unicode>::iterator find(const std::span<const std::unicode>& span, const std::wstring_view v){
             std::wstring_view view(span.begin(), span.end());
             auto e = view.find(v);
