@@ -39,6 +39,9 @@ namespace Getters
             }
             return out;
         };
+        std::shared_ptr<Getter> create(const std::span<std::unicode>& span){
+            return std::make_shared<cell_range>(span);
+        }
         
         cell_range(const glm::uvec2 from, const glm::uvec2 to, const glm::bvec4 staticb = {0,0,0,0}) : b(from), e(to), state(staticb) {}
         cell_range(const std::span<const std::unicode> span){

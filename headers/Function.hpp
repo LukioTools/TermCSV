@@ -142,5 +142,5 @@ public:
     Function(const Function& copy):fn(copy.fn), getters(copy.getters){};
     Function(Function&& move): fn(std::move(move.fn)), getters(std::move(move.getters)){};
 
-    inline static std::map<std::ustring, Function_t> parsers;
+    inline static std::map<std::ustring, Function_t> functions;
 };

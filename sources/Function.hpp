@@ -37,9 +37,10 @@ std::shared_ptr<Getter> Function::parse_function(const std::span<const std::unic
     Function fn;
     auto func = Function::parse_func(whole_string);
     auto args = Function::parse_terms(func.second);
-    auto it = parsers.find(to_string(func.first));
-    if(it == parsers.end())
-        return Getters::function_getter::shared({});
+    
+    auto it = functions.find(to_string(func.first));
+    if(it == functions.end()) return Getters::function_getter::shared({});
+
     fn.func(it->second);
     for(auto& e : args){
         auto term = parse_term(e);

@@ -18,6 +18,7 @@ namespace Getters
         inline static std::shared_ptr<Getter> shared(const eval_value& ev){
             return std::make_shared<value>(ev);
         }
+        inline static 
         value(const eval_value& ev = std::monostate()) : eval_value(ev){}
     };
 } // namespace Getters
