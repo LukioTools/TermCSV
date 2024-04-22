@@ -1,7 +1,9 @@
+#include "headers/Filter.hpp"
 #include "headers/Getters/cell_range.hpp"
 #include "headers/Getters/getters.hpp"
 #include "headers/Function.hpp"
 #include "headers/Getters/value.hpp"
+#include "headers/eval_value.hpp"
 #include "sources/Cell.hpp"
 #include "sources/Sheet.hpp"
 #include "sources/Function.hpp"
@@ -33,13 +35,14 @@ eval_value fn_multiply(Sheet &, std::span<eval_value> values) {
     return out;
 }
 
+
 int main(int argc, char const *argv[])
 {
-    std::ustring str = L"ADD(MULTIPLY(VALUE(6),VALUE(6)),VALUE(15),VALUE(17))";
-
     Sheet s;
 
-    s[0][0].set(69L);
+    for (size_t x = 0; x < 100; x++)
+        for (size_t y = 0; y < 100; y++)
+        s[x][y].set(long(x*y+x));
 
     //std::wcout << Function::create(str).eval(s).to_string() << std::endl;
 
@@ -49,10 +52,22 @@ int main(int argc, char const *argv[])
         std::wcout << e.to_string() << std::endl;
     };
 
+    std::span span = pvs;
+    span = span.subspan(span.size());
+    std::wcout << L"span: " << std::ustring(span.begin(), span.end()) << std::endl; 
+
     std::ustring c = L"0:0->"; //select every cell plausable
     std::wcout << L"range: " << c << L" (aka every cell that exists)"<<std::endl;
     std::wcout << L"selected cell values: " << std::endl;
-    for(auto& e : Function::parse_cell_range(c)->get(s)){
+    Filter f;
+
+    f.add(Function::parse_cell_range(c))
+    .func([](Sheet&, eval_value& ev){
+        if(ev.index() == eval_value::INTEGER && ev.as<eval_value::INTEGER>()%2 == 1) return true; 
+        return false;
+    });
+    
+    for(auto& e :  f.eval(s)){
         std::wcout << e.to_string() << std::endl;
     }
 

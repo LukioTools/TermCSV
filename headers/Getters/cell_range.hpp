@@ -43,7 +43,8 @@ namespace Getters
         cell_range(const glm::uvec2 from, const glm::uvec2 to, const glm::bvec4 staticb = {0,0,0,0}) : b(from), e(to), state(staticb) {}
         cell_range(const std::span<const std::unicode> span){
             auto sep = Getters::cell_range::find_pos(span, Getters::cell_range::range_seperator);
-            if(sep == std::variant_npos || sep+range_seperator.size() >= span.size()) throw std::runtime_error("cell_range::invalid constructor argument (could not find seperator)");
+            std::cout << sep << "/" << span.size() << std::endl;
+            if(sep == std::variant_npos || sep+range_seperator.size() > span.size()) throw std::runtime_error("cell_range::invalid constructor argument (could not find seperator): " + std::to_string(sep+ range_seperator.size()) + "/" + std::to_string(span.size()) );
 
             auto beg = span.subspan(0, sep);
             auto end = span.subspan(sep+range_seperator.size());
