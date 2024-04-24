@@ -4,25 +4,40 @@
 ### Example
 `FUNCTION_NAME(ARG1, ARG2, ...)`
 <br>
-`ADD(1,2,4,8)` *(result) ->1+2+4+8 -> 15*
+`ADD(1,2,4,8)` *->1+2+4+8 -> 15*
 <br>
-`MULTIPLY(1,2,4,8)` *(result) -> 1\*2\*4\*8 -> 16*
+`MULTIPLY(1,2,4,8)` *-> 1\*2\*4\*8 -> 16*
 
 ### Explanation
 Functions fundementaly return only one value, for multiple returns see [Filter](#filters)
 <br>
 Depending on function it might not use all of the arguments
+<br>
 If not enough variables are supplied empty *(std::monostate())* is returned
+<br>
+For individual functions you shall refer to ~~function-list~~
 
 ## Filters
-todo
 ### Example
 Syntax is like [Functions](#functions)
 
-### Explanation
-For either modifying values, filtering only wanted values.
+`FILTER_NAME(ARG1, ARG2, ...)`
 <br>
-Returns multiple values so it cannot be an cells endpoint *(first value is used)*
+`EVEN(1,2,3,4,5,6,7)` *-> {2,4,6}*
+<br>
+`ODD(1,2,3,4,5,6,7)` *-> {1,3,5,7}*
+<br>
+`GEQ(1,2,3,4,5,6,7,5)` *-> {5,6,7}*
+<br>
+`LEQ(1,2,3,4,5,6,7,5)` *-> {1,2,3,4,5}*
+
+
+### Explanation
+For either modifying values or filtering only wanted values.
+<br>
+Returns multiple values so it cannot be an cells endpoint *(first value is used if it is used incorrectly)*
+<br>
+For individual filter you shall refer to ~~filter-list~~
 
 ## Cell-Ranges
 *Single Cell*: `x:y->x+1:y+1` ~~or `x:y`~~ 
