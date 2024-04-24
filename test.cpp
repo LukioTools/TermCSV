@@ -63,7 +63,7 @@ int main(int argc, char const *argv[])
 
     f.add(Getters::cell_range::create(c))
     .func([](Sheet&, eval_value& ev){
-        if(ev.index() == eval_value::INTEGER && ev.as<eval_value::INTEGER>()%2 == 1) return true; 
+        if(ev.index() == eval_value::INTEGER && ev.as<eval_value::INTEGER>()%1000 == 1) return true; 
         return false;
     });
     
