@@ -48,7 +48,7 @@ int main(int argc, char const *argv[])
 
     std::ustring pvs = L"003451";
     std::wcout << pvs << L": " << std::flush;
-    for(auto& e : Function::parse_value(pvs)->get(s)){
+    for(auto& e : Getters::value::create(pvs)->get(s)){
         std::wcout << e.to_string() << std::endl;
     };
 
@@ -61,7 +61,7 @@ int main(int argc, char const *argv[])
     std::wcout << L"selected cell values: " << std::endl;
     Filter f;
 
-    f.add(Function::parse_cell_range(c))
+    f.add(Getters::cell_range::create(c))
     .func([](Sheet&, eval_value& ev){
         if(ev.index() == eval_value::INTEGER && ev.as<eval_value::INTEGER>()%2 == 1) return true; 
         return false;

@@ -39,7 +39,7 @@ namespace Getters
             }
             return out;
         };
-        std::shared_ptr<Getter> create(const std::span<std::unicode>& span){
+        static std::shared_ptr<Getter> create(const std::span<std::unicode>& span){
             return std::make_shared<cell_range>(span);
         }
         
