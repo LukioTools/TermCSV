@@ -2,16 +2,17 @@
 ## Functions
 
 ### Example
-<b>FUNCTION_NAME(</b>ARG1, ARG2, ...<b>)</b>
+`FUNCTION_NAME(ARG1, ARG2, ...)`
 <br>
-<b>ADD(</b>1,2,4,8<b>)</b><br> *(result) ->1+2+4+8 -> 15*
+`ADD(1,2,4,8)` *(result) ->1+2+4+8 -> 15*
 <br>
-<b>MULTIPLY(</b>1,2,4,8<b>)</b> <br> *(result) -> 1\*2\*4\*8 -> 16*
+`MULTIPLY(1,2,4,8)` *(result) -> 1\*2\*4\*8 -> 16*
 
 ### Explanation
-functions fundementaly return only one value, for multiple returns see [Filter](#filters)
+Functions fundementaly return only one value, for multiple returns see [Filter](#filters)
 <br>
-depending on function it might not use all of the arguments
+Depending on function it might not use all of the arguments
+If not enough variables are supplied empty *(std::monostate())* is returned
 
 ## Filters
 todo
@@ -24,9 +25,19 @@ For either modifying values, filtering only wanted values.
 Returns multiple values so it cannot be an cells endpoint *(first value is used)*
 
 ## Cell-Ranges
-*Single Cell*: **x:y->x+1:y+1** ~~or x:y~~ 
+*Single Cell*: `x:y->x+1:y+1` ~~or `x:y`~~ 
 <br>
-~~Whole Column: x:y->~~
+~~Whole Column: `x:y->x:`~~
+<br>
+Part of Column: `x:y->x:y+n`
+<br>
+~~Whole Row: `x:y->:y`~~
+<br>
+Part of Row: `x:y->x+n:y`
+<br>
+Constants are defined with !: `!x:!y->n:n`
+
+
 <br>
 ### Explanation
 **Cells who dont have an value are ignored**

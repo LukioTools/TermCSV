@@ -60,7 +60,6 @@ int main(int argc, char const *argv[])
     std::wcout << L"range: " << c << L" (aka every cell that exists)"<<std::endl;
     std::wcout << L"selected cell values: " << std::endl;
     Filter f;
-
     f.add(Getters::cell_range::create(c))
     .func([](Sheet&, eval_value& ev){
         if(ev.index() == eval_value::INTEGER && ev.as<eval_value::INTEGER>()%1000 == 1) return true; 
