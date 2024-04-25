@@ -9,12 +9,13 @@
 #include <iostream>
 #include <locale>
 #include <ostream>
+#include <sstream>
 #include <string>
 #include <sys/types.h>
 #include <type_traits>
 #include <variant>
 
-struct Eval : public std::variant<std::monostate, std::wstring, long, double>{
+struct Eval : public std::variant<std::monostate, std::wstring, long, double> {
 
     enum {
         NONE,
@@ -32,21 +33,21 @@ struct Eval : public std::variant<std::monostate, std::wstring, long, double>{
 
     std::wstring to_wstring()const {
         switch (index()) {
-            case NONE:  return {};
+            case NONE:      return {};
             case STRING:    return std::get<STRING>(*this);
             case INTEGER:   return std::to_wstring(std::get<INTEGER>(*this));
-            case FLOAT: return std::to_wstring(std::get<FLOAT>(*this));
-            default:    return L"INVALID";
+            case FLOAT:     return (std::wostringstream() << std::get<FLOAT>(*this)).str();
+            default:        return L"INVALID";
         }
     }
 
     std::string to_string()const {
         switch (index()) {
-            case NONE:  return {};
+            case NONE:      return {};
             case STRING:    return std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(std::get<STRING>(*this));
             case INTEGER:   return std::to_string(std::get<INTEGER>(*this));
-            case FLOAT: return std::to_string(std::get<FLOAT>(*this));
-            default:    return "INVALID";
+            case FLOAT:     return std::to_string(std::get<FLOAT>(*this));
+            default:        return "INVALID";
         }
     }
     friend std::ostream& operator<<(std::ostream& os, const Eval& ev){
@@ -69,24 +70,24 @@ struct Eval : public std::variant<std::monostate, std::wstring, long, double>{
         switch (index()) {
             case STRING:    return as<STRING>() + std::to_wstring(l);
             case INTEGER:   return as<INTEGER>() + l;
-            case FLOAT: return as<FLOAT>() + l;
-            case NONE:  default:  return l;
+            case FLOAT:     return as<FLOAT>() + l;
+            default:        return l;
         }
     }
     Eval operator+(const std::wstring& l) const {
         switch (index()) {
-            case STRING: return as<STRING>() + l;
-            case INTEGER: return std::to_wstring(as<INTEGER>()) + l;
-            case FLOAT: return std::to_wstring(as<FLOAT>()) + l;
-            case NONE: default: return l;
+            case STRING:    return as<STRING>() + l;
+            case INTEGER:   return std::to_wstring(as<INTEGER>()) + l;
+            case FLOAT:     return std::to_wstring(as<FLOAT>()) + l;
+            default:        return l;
         }
     }
     Eval operator+(const Eval& e) const {
         switch (e.index()) {
-            case STRING: return this->operator+(e.as<STRING>());
-            case INTEGER: return this->operator+(e.as<INTEGER>());
-            case FLOAT: return this->operator+(e.as<FLOAT>());
-            case NONE: default: return *this;
+            case STRING:    return this->operator+(e.as<STRING>());
+            case INTEGER:   return this->operator+(e.as<INTEGER>());
+            case FLOAT:     return this->operator+(e.as<FLOAT>());
+            default:        return *this;
         }
     }
     template<typename T>

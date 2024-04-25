@@ -9,7 +9,7 @@ private:
     std::vector<Column> columns;
 public:
     Column& operator[](std::size_t i){
-        if(i>=columns.size()) columns.resize(i);
+        if(i>=columns.size()) columns.resize(i+1);
         return columns[i];
     }
 

@@ -3,18 +3,24 @@
 ### Example
 `FUNCTION_NAME(ARG1, ARG2, ...)`
 <br>
-`ADD(1,2,4,8)` *->1+2+4+8 -> 15*
+`ADD(1,2,4,8)` *->1+2+4+8 -> {15}*
 <br>
-`MULTIPLY(1,2,4,8)` *-> 1\*2\*4\*8 -> 16*
+`MULTIPLY(1,2,4,8)` *-> 1\*2\*4\*8 -> {16}*
+<br>
+`ODD(1,2,3,4,5,6,7)` *-> {1,3,5,7}*
+<br>
+`GEQ(1,2,3,4,5,6,7,5)` *-> {5,6,7}*
 
 ### Explanation
-Functions fundementaly return only one value, for multiple returns see [Filter](#filters)
+Functions fundementaly return a list of values
 <br>
 Depending on function it might not use all of the arguments
 <br>
 If not enough variables are supplied empty [Null](#null) is returned
 <br>
 For individual functions you shall refer to [function-list](#function-list)
+<br>
+
 
 ### Function-List
 
@@ -42,28 +48,6 @@ If no arguments are provided, returns [Null](#null)
 Count the number of arguments, returns an [Integer](#integer) of the number of argumens supplied.
 Returns an [Integer](#integer) zero if none are supplied.
 
-
-## Filters
-### Example
-Syntax is like [Functions](#functions)
-
-`FILTER_NAME(ARG1, ARG2, ...)`
-<br>
-`EVEN(1,2,3,4,5,6,7)` *-> {2,4,6}*
-<br>
-`ODD(1,2,3,4,5,6,7)` *-> {1,3,5,7}*
-<br>
-`GEQ(1,2,3,4,5,6,7,5)` *-> {5,6,7}*
-<br>
-`LEQ(1,2,3,4,5,6,7,5)` *-> {1,2,3,4,5}*
-
-
-### Explanation
-For either modifying values or filtering only wanted values.
-<br>
-Returns multiple values so it cannot be an cells endpoint *(first value is used if it is used incorrectly)*
-<br>
-For individual filter functions you shall refer to [filter-list](#filter-list)
 
 ### Filter-List
 
@@ -123,6 +107,6 @@ If there are two or more decilmal points, or it contains a charachter other than
 
 
 ## Null
-Is a std::monostate() present in both cell_value and eval_value
+Is a std::monostate() present in Eval variant
 <br>
 Used to represent nonexistant values fe. empty cells and invalid function usage

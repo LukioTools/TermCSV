@@ -1,6 +1,7 @@
 #pragma  once
 #include "Getter-ln.hpp"
 #include "../Eval.hpp"
+#include <memory>
 #include <variant>
 
 namespace Getters {
@@ -18,6 +19,12 @@ namespace Getters {
         Eval& value(){
             return *this;
         }
+
+        template<class ...Va>
+        inline static std::shared_ptr<Getter> shared(Va...a){
+            return std::make_shared<Value>(a...);
+        }
+
         template<class T>
         Value(const T& e) : Eval(e){};
         template<class T>

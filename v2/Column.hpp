@@ -3,13 +3,13 @@
 #include <vector>
 #include "Cell.hpp"
 
-
 class Column{
 private:
     std::vector<Cell> cells;
 public:
+
     Cell& operator[](std::size_t i){
-        if(!defined(i)) cells.resize(i);
+        if(!defined(i)) cells.resize(i+1);
         return cells[i];
     }
 

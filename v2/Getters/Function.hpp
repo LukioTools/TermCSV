@@ -14,7 +14,7 @@ namespace Getters {
 class Function : public Getter{
 private:
 public:
-    using Type = std::function<Eval(const std::span<const Eval> )>;
+    using Type = std::function<std::vector<Eval>(std::span<Eval>)>;
     std::vector<std::shared_ptr<Getter>> getters;
     Type function;
 
@@ -27,7 +27,13 @@ public:
                 ev.emplace_back(e);
             }
         }
-        return {function(ev)};
+        return function(ev);
+    }
+
+    template<class ...Va>
+    requires(std::is_same_v<Va, std::shared_ptr<Getter>> &&...)
+    inline static std::shared_ptr<Getter> shared(const Type& fn, const Va& ...args){
+        return  std::make_shared<Function>(fn, std::vector<std::shared_ptr<Getter>>{args...});
     }
 
     Function& fn(const Type& i){
@@ -70,6 +76,7 @@ public:
 
 
     Function(){}
+    Function(const Type& fn, const std::vector<std::shared_ptr<Getter>> v): getters(v), function(fn){}
     ~Function(){}
 
 };
