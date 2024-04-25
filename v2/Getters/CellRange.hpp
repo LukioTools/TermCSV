@@ -118,6 +118,11 @@ public:
         return os;
     }
 
+    friend std::wostream& operator<<(std::wostream& os, const CellRange& cr){
+        os << L"{valid: " << (cr.valid() ? L"True, [": L"False, [") <<  cr.begin.x << L", " << cr.begin.y << L"]/[" << cr.end.x << L", " << cr.end.y << L"]}";
+        return os;
+    }
+
     CellRange(){}
 
     ~CellRange(){}
