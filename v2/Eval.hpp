@@ -164,6 +164,40 @@ struct Eval : public std::variant<std::monostate, std::wstring, long, double>{
         }
     }
 
+    /////////////////////MODULO////////////////////////
+    Eval operator%(const std::wstring& exponent){
+        return 0;
+    }
+    template<typename T>
+    requires(std::is_integral_v<T>)
+    Eval operator%(const T& exponent){
+        switch (index()) {
+            case STRING: return 0;
+            case INTEGER: return as<INTEGER>()%exponent;
+            case FLOAT: return std::fmod(as<FLOAT>(), exponent);
+            case NONE: default: return 0;
+        }
+    }
+    template<typename T>
+    requires(std::is_floating_point_v<T>)
+    Eval operator%(const T& exponent){
+        switch (index()) {
+            case STRING: return 0;
+            case INTEGER: return std::fmod(as<INTEGER>(), exponent);
+            case FLOAT: return std::fmod(as<FLOAT>(), exponent);
+            case NONE: default: return 0;
+        }
+    }
+    Eval operator%(const Eval& e){
+        switch (e.index()) {
+            case INTEGER: return this->operator^(e.as<INTEGER>());
+            case FLOAT: return this->operator^(e.as<FLOAT>());
+            default: return 0;
+        }
+    }
+
+
+
     Eval invert() const{
         switch (index()) {
             case STRING: {
