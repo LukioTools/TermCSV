@@ -54,7 +54,7 @@ int main(int argc, const char* argv[]){
 
     for(long x = 0; x < 10; x++)
         for(long y = 0; y < 10; y++){
-        s[x][y] = Getters::Value::shared(x*y+x);
+        s[x][y] = Getters::Value::shared(x*y+x+y);
     }
         
 
