@@ -21,13 +21,13 @@ Eval func(const std::span<const Eval> vals){
 int main(int argc, const char* argv[]){
 
     Sheet s;
-    Getters::Value v = L"1VALTHING ";
-    Getters::Value v2 = 2;
+    Getters::Value v = 55;
+    Getters::Value v2 = 4.5;
 
-    std::wcout << v.value().to_wstring() << std::endl;
-    std::wcout << v2.value().to_wstring() << std::endl;
+    std::wcout << v << std::endl;
+    std::wcout << v2 << std::endl;
 
-    std::wcout << (v+v2).to_wstring() << std::endl; 
+    std::wcout << v << "^" << v2 << " = " << (v.value()^v2.value()).to_wstring() << std::endl; 
 
 
 
