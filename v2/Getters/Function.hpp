@@ -9,17 +9,25 @@
 #include <vector>
 
 
+namespace Getters {
 
 class Function : public Getter{
 private:
 public:
-    using Type = std::function<Eval(Sheet& ,const std::span<const std::shared_ptr<Getter>> )>;
+    using Type = std::function<Eval(const std::span<const Eval> )>;
     std::vector<std::shared_ptr<Getter>> getters;
     Type function;
 
     std::vector<Eval> get(Sheet& s) override{
         if(!function) return {std::monostate()};
-        return {function(s, getters)};
+        std::vector<Eval> ev;
+        for (auto& gt : getters) {
+            if(!gt) continue;
+            for(auto& e : gt->get(s)){
+                ev.emplace_back(e);
+            }
+        }
+        return {function(ev)};
     }
 
     Function& fn(const Type& i){
@@ -65,3 +73,4 @@ public:
     ~Function(){}
 
 };
+}
