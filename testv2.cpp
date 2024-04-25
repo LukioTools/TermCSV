@@ -65,10 +65,10 @@ int main(int argc, const char* argv[]){
     auto column = CellRange::create(std::wstring(L"3:5->3:"));
     auto all = CellRange::create(std::wstring(L"0:0->"));
 
-    std::wclog << L"single (" << std::wstring(L"3:5") << "): " <<  (single->valid() ? L"True": L"False")  << single->begin << L"/" << single->end << ": "  << single->get(s) << std::endl;
-    std::wclog << L"row (" << std::wstring(L"3:5->:5") << "): " <<  (row->valid() ? L"True": L"False")  << row->begin << L"/" << row->end << ": "  << row->get(s) << std::endl;
-    std::wclog << L"column (" << std::wstring(L"3:5->3:") << "): " <<  (column->valid() ? L"True": L"False")  << column->begin << L"/" << column->end << ": "  << column->get(s) << std::endl;
-    std::wclog << L"all (" << std::wstring(L"0:0->") << "): " <<  (all->valid() ? L"True": L"False")  << all->begin << L"/" << all->end << ": "  << all->get(s) << std::endl;
+    std::wclog << L"single (" << std::wstring(L"3:5") << "): " << single << ": "  << single->get(s) << std::endl;
+    std::wclog << L"row (" << std::wstring(L"3:5->:5") << "): " << row << ": "  << row->get(s) << std::endl;
+    std::wclog << L"column (" << std::wstring(L"3:5->3:") << "): " << column << ": "  << column->get(s) << std::endl;
+    std::wclog << L"all (" << std::wstring(L"0:0->") << "): " << all << ": "  << all->get(s) << std::endl;
 
 
 

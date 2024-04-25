@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <iostream>
 #include <memory>
+#include <ostream>
 #include <span>
 #include <string>
 #include <string_view>
@@ -105,16 +106,19 @@ public:
     }
 
 
-    bool valid(){
+    bool valid() const{
         if(begin.x > end.x || begin.y > end.y) return false;
         if(begin.x == -1 || begin.y == -1) return false;
 
         return true;
     }
 
-    CellRange(){
-        
+    friend std::ostream& operator<<(std::ostream& os, const CellRange& cr){
+        os << "{valid: " << (cr.valid() ? "True, [": "False, [") <<  cr.begin.x << ", " << cr.begin.y << "]/[" << cr.end.x << ", " << cr.end.y << "]}";
+        return os;
     }
+
+    CellRange(){}
 
     ~CellRange(){}
 
