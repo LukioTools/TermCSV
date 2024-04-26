@@ -3,6 +3,7 @@
 #include "v2/Getters/CellRange.hpp"
 #include "v2/Getters/Function.hpp"
 #include "v2/Getters/Value.hpp"
+#include "v2/Parse.hpp"
 #include <glm/detail/qualifier.hpp>
 #include <glm/fwd.hpp>
 #include <iostream>
@@ -35,6 +36,18 @@ std::wostream& operator<<(std::wostream& os, const std::vector<Eval>& v){
     return os;
 }
 
+std::wostream& operator<<(std::wostream& os, const std::vector<std::span<wchar_t>>& v){
+    os << L'{';
+    for(std::size_t i = 0; i < v.size();){
+        os << v[i].size() << ':';
+        os << '\'' << std::wstring(v[i].begin(), v[i].end()) << '\'';
+        i++;
+        if(i != v.size()) os<<L", ";
+    }
+    os << L'}';
+    return os;
+}
+
 template<glm::length_t L, typename T>
 std::wostream& operator<<(std::wostream& os, const glm::vec<L,T>& v){
     os << L'[';
@@ -57,7 +70,8 @@ int main(int argc, const char* argv[]){
         s[x][y] = Getters::Value::shared(x*y+x+y);
     }
         
-
+    /*
+    
     std::wclog << "s.size(): " << s.size() << std::endl;
 
     auto single = CellRange::create(std::wstring(L"3:5"));
@@ -70,6 +84,15 @@ int main(int argc, const char* argv[]){
     std::wclog << L"column " << std::wstring(L"3:5->3:") << ": " << *column << ": "  << column->get(s) << std::endl;
     std::wclog << L"all " << std::wstring(L"0:0->") << ": " << *all << ": "  << all->get(s) << std::endl;
 
+    */
+
+    auto str = std::wstring(L"Hello World, FUNCTION(1, ADD(1,3), WORLD), 3:5, 3:5->");
+    std::wcout << parse_terms(str) << std::endl;
+    
+    //std::wstring str = L"  Hello World  ";
+    //std::span<wchar_t> span = trim(str);
+
+    //std::wcout << std::wstring(span.begin(), span.end()) << std::endl;
 
 
 
