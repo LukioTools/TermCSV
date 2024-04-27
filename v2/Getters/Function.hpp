@@ -3,6 +3,7 @@
 #include "Getter-ln.hpp"
 #include <functional>
 #include <memory>
+#include <regex>
 #include <span>
 #include <type_traits>
 #include <variant>
@@ -17,6 +18,12 @@ public:
     using Type = std::function<std::vector<Eval>(std::span<Eval>)>;
     std::vector<std::shared_ptr<Getter>> getters;
     Type function;
+
+    static inline std::wregex is_function_regex = std::wregex(L"^.*?\\(.*\\)$");
+
+    inline static bool is_function(const std::span<const wchar_t> span){
+        return std::regex_match(span.begin(), span.end(), is_function_regex);
+    }
 
     std::vector<Eval> get(Sheet& s) override{
         if(!function) return {std::monostate()};

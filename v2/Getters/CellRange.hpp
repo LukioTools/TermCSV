@@ -10,12 +10,17 @@
 #include <iostream>
 #include <memory>
 #include <ostream>
+#include <regex>
 #include <span>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <variant>
 #include "../Sheet.hpp"
+
+
+namespace Getters {
+
 
 class CellRange : public Getter{
 private:
@@ -24,6 +29,12 @@ public:
     inline static std::wstring range = L"->";
     inline static std::wstring component = L":";
     inline static wchar_t constant = L'!';
+    inline static std::wregex is_range_regex = std::wregex(L"^!?\\d+:!?\\d+(->!?\\d*:?!?\\d*)?$");
+
+
+    inline static bool is_cellrange(const std::span<wchar_t const> sp){
+        return std::regex_match(sp.begin(), sp.end(), is_range_regex);
+    }
     inline static std::shared_ptr<CellRange> create(const std::span<wchar_t const> sp){
         auto sr = std::make_shared<CellRange>();
         auto& r = *sr;
@@ -128,3 +139,6 @@ public:
     ~CellRange(){}
 
 };
+
+
+}
