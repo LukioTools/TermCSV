@@ -14,18 +14,12 @@ namespace Getters {
         auto o = split_function(sp);
 
         if(!o){
-            std::wclog << L"o was null"  << std::endl;
-            std::clog << "o was null"  << std::endl;
             return nullptr;
         }
 
-        std::wclog << "fn: " <<         std::wstring_view(o->fn.begin(), o->fn.end()) << std::endl;
-        std::wclog << "args: " <<         std::wstring_view(o->args.begin(), o->args.end()) << std::endl;
         auto f = *o;
         auto fnptr = functions[std::wstring_view(f.fn.begin(), f.fn.end())];
         if(!fnptr){
-            std::wclog << L"no fnpotr" << std::endl;
-            std::clog << "no fnpotr" << std::endl;
             return nullptr;
         }
 

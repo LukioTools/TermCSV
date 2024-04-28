@@ -57,9 +57,7 @@ namespace Getters {
         cst[0] = parse_const(xs);
         cst[1] = parse_const(ys);
 
-        std::wclog << L"out.x: '" << std::wstring(xs.begin(), xs.end()) << '\'' << xs.size() << std::endl;
         out.x = parse_num(std::wstring(xs.begin(), xs.end()));
-        std::wclog << L"out.y: '" << std::wstring(ys.begin(), ys.end()) << '\'' << ys.size() << std::endl;
         out.y = parse_num(std::wstring(ys.begin(), ys.end()));
         return out;
     }catch (...) {return invalid;}

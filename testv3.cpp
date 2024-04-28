@@ -26,19 +26,27 @@ int main(int argc, const char* argv[]){
     Sheet s;
     Getters::Function::functions[L"ADD"] = [](std::span<Eval> sp){
         Eval out = std::monostate();
-        for(auto& e : sp){
-            std::wcout << "e: " << e.to_wstring() << std::endl;
-            out = out + e;
-        }
+        for(auto& e : sp) out = out + e;
+        
         return std::vector<Eval>{out};
     };
-    auto fn = Getters::Function::create(std::wstring(L"ADD(1,2)"));
+    Getters::Function::functions[L"MULTIPLY"] = [](std::span<Eval> sp){
+        if(sp.empty()) return std::vector<Eval>{};
+        Eval out = sp.front();
+        for(std::size_t i = 1; i < sp.size(); i++)
+            out = out * sp[i];
+        
+        return std::vector<Eval>{out};
+    };
+
+
+    auto fn = Getters::Function::create(std::wstring(L"MULTIPLY(ADD(1,2),5,\" XD\")")); // repeat " XD" ((1+2)*5-> 15) times
 
 
     std::wcout << fn << std::endl;
 
     if(fn)
-        std::wcout << fn->get(s) << std::endl;;
+        std::wcout << fn->get(s) << std::endl;
 
 
 
