@@ -24,9 +24,18 @@ int main(int argc, const char* argv[]){
 
 
     Sheet s;
+
+
+
     Getters::Function::functions[L"ADD"] = [](std::span<Eval> sp){
         Eval out = std::monostate();
         for(auto& e : sp) out = out + e;
+        
+        return std::vector<Eval>{out};
+    };
+    Getters::Function::functions[L"ADD"] = [](std::span<Eval> sp){
+        Eval out = std::monostate();
+        for(auto& e : sp) out = out + e.negate();
         
         return std::vector<Eval>{out};
     };
@@ -40,7 +49,7 @@ int main(int argc, const char* argv[]){
     };
 
 
-    auto fn = Getters::Function::create(std::wstring(L"MULTIPLY(ADD(1,2),5,\" XD\")")); // repeat " XD" ((1+2)*5-> 15) times
+    auto fn = Getters::Function::create(std::wstring(L"ADD(1,-6)")); // repeat " XD" ((1+2)*5-> 15) times
 
 
     std::wcout << fn << std::endl;
