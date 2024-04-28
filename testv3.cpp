@@ -53,18 +53,11 @@ int main(int argc, const char* argv[]){
     };
     Getters::Function::functions[L"ABS"] = [](std::span<Eval> sp){
         std::vector<Eval> out;
-        for(auto& e : sp){
-            out.emplace_back(e.abs());
-        }
+        for(auto& e : sp) out.emplace_back(e.abs());
+        
         return out;
     };
-    Getters::Function::functions[L"ABS"] = [](std::span<Eval> sp){
-        std::vector<Eval> out;
-        for(auto& e : sp){
-            out.emplace_back(e.abs());
-        }
-        return out;
-    };
+
     Getters::Function::functions[L"HEX"] = [](std::span<Eval> sp){
         std::vector<Eval> out;
         for(auto& e : sp)try{
