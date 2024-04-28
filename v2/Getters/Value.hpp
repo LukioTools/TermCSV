@@ -2,6 +2,8 @@
 #include "Getter-ln.hpp"
 #include "../Eval.hpp"
 #include <memory>
+#include <span>
+#include <string>
 #include <variant>
 
 namespace Getters {
@@ -18,6 +20,10 @@ namespace Getters {
         }
         Eval& value(){
             return *this;
+        }
+
+        inline static std::shared_ptr<Value> create(const std::span<const wchar_t> sp){
+            return std::make_shared<Value>(std::wstring(sp.begin(), sp.end()));
         }
 
         template<class ...Va>

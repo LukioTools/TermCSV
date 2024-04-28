@@ -1,14 +1,18 @@
 #pragma once
 
 #include "Getter-ln.hpp"
+#include <algorithm>
 #include <functional>
+#include <map>
 #include <memory>
 #include <regex>
 #include <span>
+#include <string_view>
 #include <type_traits>
+#include <utility>
 #include <variant>
 #include <vector>
-
+#include "../Parser/Parse.hpp"
 
 namespace Getters {
 
@@ -19,10 +23,25 @@ public:
     std::vector<std::shared_ptr<Getter>> getters;
     Type function;
 
+    static inline std::map<std::wstring_view, Type> functions;
+
     static inline std::wregex is_function_regex = std::wregex(L"^.*?\\(.*\\)$");
 
     inline static bool is_function(const std::span<const wchar_t> span){
         return std::regex_match(span.begin(), span.end(), is_function_regex);
+    }
+
+    inline static std::shared_ptr<Function> create(const std::span<const wchar_t>& sp){
+        auto o = split_function(sp);
+        if(!o) return nullptr;
+        auto f = *o;
+        auto fnptr = functions[std::wstring_view(f.fn.begin(), f.fn.end())];
+        if(!fnptr) return nullptr;
+
+        return std::make_shared<Function>(
+            fnptr,
+            parse(f.args)
+        );
     }
 
     std::vector<Eval> get(Sheet& s) override{
@@ -83,7 +102,8 @@ public:
 
 
     Function(){}
-    Function(const Type& fn, const std::vector<std::shared_ptr<Getter>> v): getters(v), function(fn){}
+    Function(const Type& fn, const std::vector<std::shared_ptr<Getter>>& v): getters(v), function(fn){}
+    Function(const Type& fn, std::vector<std::shared_ptr<Getter>>&& v): getters(std::move(v)), function(fn){}
     ~Function(){}
 
 };

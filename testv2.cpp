@@ -1,9 +1,7 @@
 #include "v2/Eval.hpp"
-#include "v2/Getters.hpp"
-#include "v2/Getters/CellRange.hpp"
 #include "v2/Getters/Function.hpp"
 #include "v2/Getters/Value.hpp"
-#include "v2/Parse.hpp"
+#include "v2/Sheet.hpp"
 #include <glm/detail/qualifier.hpp>
 #include <glm/fwd.hpp>
 #include <iostream>
@@ -11,7 +9,6 @@
 #include <ostream>
 #include <span>
 #include <string>
-#include <variant>
 #include <vector>
 
 
@@ -86,13 +83,24 @@ int main(int argc, const char* argv[]){
 
     */
 
-    auto str = std::wstring(L"Hello World, FUNCTION(1, ADD(1,3), WORLD), 3:5, 3:5->");
-    std::wcout << parse_terms(str) << std::endl;
+    //auto str = std::wstring(L"Hello World, FUNCTION(1, ADD(1,3), WORLD), 3:5, 3:5->");
+    //std::wcout << parse_terms(str) << std::endl;
     
     //std::wstring str = L"  Hello World  ";
     //std::span<wchar_t> span = trim(str);
 
     //std::wcout << std::wstring(span.begin(), span.end()) << std::endl;
+
+    std::wstring str = L"ADD(1, 2, 4, 3)";
+
+    auto getter = Getters::Function::create(str);
+
+    std::wcout << getter << std::endl;
+
+    if (getter) std::wcout << getter->get(s) << std::endl;
+    else std::wcout << L"No Getter" << std::endl;
+
+
 
 
 
