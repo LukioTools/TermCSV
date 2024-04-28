@@ -33,9 +33,9 @@ int main(int argc, const char* argv[]){
         
         return std::vector<Eval>{out};
     };
-    Getters::Function::functions[L"ADD"] = [](std::span<Eval> sp){
+    Getters::Function::functions[L"SUB"] = [](std::span<Eval> sp){
         Eval out = std::monostate();
-        for(auto& e : sp) out = out + e.negate();
+        for(auto& e : sp) out = out - e;
         
         return std::vector<Eval>{out};
     };
@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]){
     };
 
 
-    auto fn = Getters::Function::create(std::wstring(L"ADD(1,-6)")); // repeat " XD" ((1+2)*5-> 15) times
+    auto fn = Getters::Function::create(std::wstring(L"SUB(1,-6)")); // repeat " XD" ((1+2)*5-> 15) times
 
 
     std::wcout << fn << std::endl;
