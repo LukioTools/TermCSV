@@ -1,8 +1,10 @@
 
 #include "v3/lib/Core/Getters/Function.hpp"
+#include <ios>
 #include <iostream>
 #include <ostream>
 #include <span>
+#include <sstream>
 #include <string>
 #include <variant>
 #include <vector>
@@ -34,8 +36,10 @@ int main(int argc, const char* argv[]){
         return std::vector<Eval>{out};
     };
     Getters::Function::functions[L"SUB"] = [](std::span<Eval> sp){
-        Eval out = std::monostate();
-        for(auto& e : sp) out = out - e;
+        if(sp.empty()) return std::vector<Eval>{std::monostate()};
+        Eval out = sp.front();
+        for(std::size_t i = 1; i < sp.size(); i++)
+            out = out - sp[i];
         
         return std::vector<Eval>{out};
     };
@@ -47,15 +51,46 @@ int main(int argc, const char* argv[]){
         
         return std::vector<Eval>{out};
     };
+    Getters::Function::functions[L"ABS"] = [](std::span<Eval> sp){
+        std::vector<Eval> out;
+        for(auto& e : sp){
+            out.emplace_back(e.abs());
+        }
+        return out;
+    };
+    Getters::Function::functions[L"ABS"] = [](std::span<Eval> sp){
+        std::vector<Eval> out;
+        for(auto& e : sp){
+            out.emplace_back(e.abs());
+        }
+        return out;
+    };
+    Getters::Function::functions[L"HEX"] = [](std::span<Eval> sp){
+        std::vector<Eval> out;
+        for(auto& e : sp)try{
+            if (e.index() == Eval::STRING) {
+                out.emplace_back(Eval(std::stol(std::get<Eval::STRING>(e), 0, 16)));
+            }
+            else if (e.index() == Eval::INTEGER) {
+                out.emplace_back((std::wostringstream() << L"0x" << std::hex << std::uppercase << std::get<Eval::INTEGER>(e)).str());           
+            }
+            else if(e.index() == Eval::FLOAT){
+                out.emplace_back((std::wostringstream() << L"0x" << std::hexfloat << std::get<Eval::FLOAT>(e)).str());           
+            }
+            else{
+                out.push_back(e);
+            }
+        }catch(...){out.push_back(e);}
+        return out;
+    };
 
 
-    auto fn = Getters::Function::create(std::wstring(L"SUB(1,-6)")); // repeat " XD" ((1+2)*5-> 15) times
+    auto fn = Getters::Function::create(std::wstring(L"HEX(ADD(HEX(0xEAEDEA), 8))"));
 
 
-    std::wcout << fn << std::endl;
+    std::wcout << "fnptr: " << fn << std::endl;
 
-    if(fn)
-        std::wcout << fn->get(s) << std::endl;
+    if(fn) std::wcout << fn->get(s) << std::endl;
 
 
 

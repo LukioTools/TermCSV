@@ -216,4 +216,13 @@ Eval Eval::operator-(const Eval& e) const{
     }
 }
 
+Eval Eval::abs() const {
+    switch (index()) {
+        case STRING: return *this;
+        case INTEGER: return std::abs(as<INTEGER>());
+        case FLOAT: return std::abs(as<FLOAT>());
+        case NONE: default: return std::monostate();
+    }
+}
+
 

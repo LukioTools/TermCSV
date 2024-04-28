@@ -97,6 +97,7 @@ struct Eval : public std::variant<std::monostate, std::wstring, long, double> {
 
     Eval invert() const;
     Eval negate() const;
+    Eval abs() const;
     Eval operator/(const Eval& e) const;
     Eval operator-(const Eval& e) const;
 
