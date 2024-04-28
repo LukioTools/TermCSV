@@ -14,6 +14,7 @@
 #include "../../lib/Core/Eval.hpp"
 
 
+
 Eval::Eval(const std::variant<std::monostate, std::wstring, long, double>& v): std::variant<std::monostate, std::wstring, long, double>(v){};
 std::wstring Eval::to_wstring()const {
     switch (index()) {

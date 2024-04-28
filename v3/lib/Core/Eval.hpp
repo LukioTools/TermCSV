@@ -7,6 +7,27 @@
 #include <type_traits>
 #include <variant>
 
+
+#include <span>
+#include <string_view>
+#include <vector>
+
+inline static std::wostream& operator<<(std::wostream& os, const std::span<const wchar_t>& wc){
+    os << std::wstring_view(wc.begin() ,wc.end());
+    return os;
+}
+
+
+inline static std::wostream& operator<<(std::wostream& os, const std::vector<std::span<const wchar_t>>& wc){
+    os << L"{ ";
+    for(std::size_t i = 0; i < wc.size(); i++){
+        os << wc[i];
+        if(i+1 != wc.size()) os << L", ";
+    }
+    os << L" }";
+    return os;
+}
+
 struct Eval : public std::variant<std::monostate, std::wstring, long, double> {
 
     enum {

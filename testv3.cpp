@@ -2,7 +2,9 @@
 #include "v3/lib/Core/Getters/Function.hpp"
 #include <iostream>
 #include <ostream>
+#include <span>
 #include <string>
+#include <variant>
 #include <vector>
 
 
@@ -16,10 +18,20 @@ std::wostream& operator<<(std::wostream& os, const std::vector<Eval>& ev){
     return os;
 }
 
+
+
 int main(int argc, const char* argv[]){
 
 
     Sheet s;
+    Getters::Function::functions[L"ADD"] = [](std::span<Eval> sp){
+        Eval out = std::monostate();
+        for(auto& e : sp){
+            std::wcout << "e: " << e.to_wstring() << std::endl;
+            out = out + e;
+        }
+        return std::vector<Eval>{out};
+    };
     auto fn = Getters::Function::create(std::wstring(L"ADD(1,2)"));
 
 

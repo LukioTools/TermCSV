@@ -15,6 +15,7 @@
 std::span<const wchar_t> trim(std::span<const wchar_t> sp){
     for(std::size_t i = 0; i < sp.size(); i++){
         if(sp[i] != L' '){
+            if(i==0) break;
             sp = sp.subspan(i);
             break;
         }
@@ -22,7 +23,6 @@ std::span<const wchar_t> trim(std::span<const wchar_t> sp){
     std::size_t i = sp.size();
     while (i) {
         --i;
-        std::wcout << i << ": " << sp[i] << std::endl;
         if(sp[i] != L' '){
             sp = sp.subspan(0, i+1);
             break;
@@ -48,15 +48,16 @@ std::vector<std::span<const wchar_t>> parse_terms(const std::span<const wchar_t>
         }
         else if(e == ',' && depth == 0){
             auto s = trim(sp.subspan(pos, i-pos));
+            std::wcout << L"term found: '" << s << L'\'' << std::endl;
             if(!s.empty()) terms.emplace_back(s);
             pos = i+1;
             continue;
         }
     }
-    if(pos+1 != sp.size()){
+    if(pos != sp.size()){
         auto s = trim(sp.subspan(pos));
+        std::wcout << L"term found after: '" << s << L'\'' << std::endl;
         if(!s.empty()) terms.emplace_back(s);
-        terms.emplace_back(s);
     }
 
     return terms;
@@ -70,12 +71,12 @@ std::unique_ptr<split_function_t> split_function(const std::span<const wchar_t> 
 
     if( b == std::variant_npos || 
         e == std::variant_npos || 
-        e < b+1 
+        e < b+2
     ) return nullptr;
 
     return std::make_unique<split_function_t>(
         span.subspan(0, b),
-        span.subspan(b+1,e-b)
+        span.subspan(b+1,e-b-1)
     );
 }
 
@@ -83,19 +84,26 @@ std::unique_ptr<split_function_t> split_function(const std::span<const wchar_t> 
 
 std::vector<std::shared_ptr<Getter>> parse(const std::span<const wchar_t> wc){
     std::vector<std::shared_ptr<Getter>> out;
+    std::wclog << "wc: " << wc << std::endl;
+    std::wclog << "trim(wc): " << trim(wc) << std::endl;
     auto terms = parse_terms(trim(wc));
+
+    std::wclog << terms << std::endl;
+
     for(auto& e : terms){
         using namespace Getters;
-
         if(CellRange::is_cellrange(e)){
+            std::wcout << "CellRange::is_cellrange(e): " << e<< std::endl;
             auto getter = CellRange::create(e);
             if(getter) out.emplace_back(getter);
         }
-        else if (Function::is_function(e)) {
+        else if (Function::is_function(e)){
+            std::wcout << "Function::is_function(e): " << e<< std::endl;
             auto getter = Function::create(e);
             if(getter) out.emplace_back(getter);
         }
         else if(!e.empty()){
+            std::wcout << "Value(e): " << e<< std::endl;
             auto getter = Value::create(e);
             if(getter) out.emplace_back(getter);
         }

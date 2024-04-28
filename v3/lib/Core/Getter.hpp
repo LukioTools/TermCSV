@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+#include <ostream>
 #include <vector>
 #include "Eval.hpp"
 #include "../SpreadSheet/Sheet.hpp"

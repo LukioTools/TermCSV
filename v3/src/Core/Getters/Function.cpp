@@ -1,5 +1,7 @@
 #include "../../../lib/Core/Getters/Function.hpp"
 #include "../../../lib/Core/Parser/Parse.hpp"
+#include <iostream>
+#include <string_view>
 
 namespace Getters {
 
@@ -16,6 +18,9 @@ namespace Getters {
             std::clog << "o was null"  << std::endl;
             return nullptr;
         }
+
+        std::wclog << "fn: " <<         std::wstring_view(o->fn.begin(), o->fn.end()) << std::endl;
+        std::wclog << "args: " <<         std::wstring_view(o->args.begin(), o->args.end()) << std::endl;
         auto f = *o;
         auto fnptr = functions[std::wstring_view(f.fn.begin(), f.fn.end())];
         if(!fnptr){

@@ -93,14 +93,22 @@ So if you want a single cell x,y you would write it as a range x:y->x+1:y+1 ~~or
 ### Numbers
 
 #### Integer
-
 All numbers, which dont have a decimal point *( ',' or '.' )* are treated as **long** *(int_64)*
+<br>
+*(regex L"^\\d+$")*
 
 #### Float
 If it has **one** decimal point*( ',' or '.' )* it is treated as a **double** *(float_64)*
+<br>
+(regex L"^\\d*(\\.|,)\\d*$")
+
 
 ### Strings
 If there are two or more decilmal points, or it contains a charachter other than a digit, it is treated as a **string** *(std::ustring aka std::wstring)*
+<br>
+Strings can be explicitly defined with " at the begining and the end
+<br>
+Strings may be converted to other values using different functions
 
 ### Timepoint / Date
 ~~Timestamp or date are marked as ...~~
