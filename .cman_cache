@@ -1,9 +1,0 @@
-v3/src/Core/Eval.cpp:0
-v3/src/Core/Getter.cpp:0
-v3/src/Core/Getters/CellRange.cpp:0
-v3/src/Core/Getters/Function.cpp:0
-v3/src/Core/Getters/Value.cpp:0
-v3/src/Core/Parser/Parse.cpp:0
-v3/src/SpreadSheet/Cell.cpp:0
-v3/src/SpreadSheet/Column.cpp:0
-v3/src/SpreadSheet/Sheet.cpp:0
