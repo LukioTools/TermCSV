@@ -1,0 +1,9 @@
+v3/src/Core/Eval.cpp:A6DD224
+v3/src/Core/Getter.cpp:E79FBF66
+v3/src/Core/Getters/CellRange.cpp:91F490A5
+v3/src/Core/Getters/Function.cpp:DEDA0A5D
+v3/src/Core/Getters/Value.cpp:FC9E9E48
+v3/src/Core/Parser/Parse.cpp:B92EE7B4
+v3/src/SpreadSheet/Cell.cpp:1B18530F
+v3/src/SpreadSheet/Column.cpp:FF75324
+v3/src/SpreadSheet/Sheet.cpp:DA8FFD04
